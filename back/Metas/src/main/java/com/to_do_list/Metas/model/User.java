@@ -20,4 +20,14 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleUser role;
+
+    public User(Integer id, String email, String password, RoleUser role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User() {
+    }
 }
