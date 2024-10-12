@@ -5,6 +5,7 @@ import com.to_do_list.Metas.model.dto.UserDto;
 
 public interface UserService {
 
-    UserDto saveUser(UserDto dto);
-    User findBYIdUser(Integer id);
+    User saveUser(UserDto dto);
+    User findByIdUser(Integer id);
+    void findByEmailUser(String email);
 }
