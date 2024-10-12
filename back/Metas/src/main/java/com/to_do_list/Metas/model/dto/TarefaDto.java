@@ -1,6 +1,7 @@
 package com.to_do_list.Metas.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,4 +16,18 @@ public class TarefaDto{
    private LocalDateTime dataIniciado;
    private LocalDateTime dataFinal;
    private Integer qDiasCompletados;
+    @NotNull(message = "Id do usuario não pode ser null.")
+   private Integer userId;
+
+    public TarefaDto(Integer id, String nome, LocalDateTime dataIniciado, LocalDateTime dataFinal, Integer qDiasCompletados, Integer userId) {
+        this.id = id;
+        this.nome = nome;
+        this.dataIniciado = dataIniciado;
+        this.dataFinal = dataFinal;
+        this.qDiasCompletados = qDiasCompletados;
+        this.userId = userId;
+    }
+
+    public TarefaDto() {
+    }
 }
