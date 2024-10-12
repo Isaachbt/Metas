@@ -23,8 +23,8 @@ public class ConfigLocal {
 
 //    @PostConstruct
 //    public void saveTarefa(){
-//        Tarefa t = new Tarefa(null,"Dormir", LocalDateTime.now(),LocalDateTime.now(),6);
-//        Tarefa t2 = new Tarefa(null,"Comer", LocalDateTime.now(),LocalDateTime.now(),7);
+//        Tarefa t = new Tarefa(null,"Dormir", LocalDateTime.now(),LocalDateTime.now(),6,52);
+//        Tarefa t2 = new Tarefa(null,"Comer", LocalDateTime.now(),LocalDateTime.now(),7,2);
 //        repositorio.saveAll(List.of(t,t2));
 //    }
 }
