@@ -24,12 +24,27 @@ public class Tarefa {
     private LocalDateTime dataIniciado;
     private LocalDateTime dataFinal;
     private Integer qDiasCompletados;
+    @Column(name = "userId")
+    private Integer userId;
 
-    public Tarefa(Integer id, String nome, LocalDateTime dataIniciado, LocalDateTime dataFinal, Integer qDiasCompletados) {
+    public Tarefa(Integer id, String nome, LocalDateTime dataIniciado, LocalDateTime dataFinal, Integer qDiasCompletados, Integer userId) {
         this.id = id;
         this.nome = nome;
         this.dataIniciado = dataIniciado;
         this.dataFinal = dataFinal;
         this.qDiasCompletados = qDiasCompletados;
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Tarefa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", dataIniciado=" + dataIniciado +
+                ", dataFinal=" + dataFinal +
+                ", qDiasCompletados=" + qDiasCompletados +
+                ", userId=" + userId +
+                '}';
     }
 }
