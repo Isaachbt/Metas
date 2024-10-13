@@ -12,7 +12,7 @@ public class TarefaDto{
     private Integer id;
     @NotBlank(message = "Necessario um nome.")
    private String nome;
-    @NotBlank(message = "Necessario uma data inicial.")
+    //@NotBlank(message = "Necessario uma data inicial.")
    private LocalDateTime dataIniciado;
    private LocalDateTime dataFinal;
    private Integer qDiasCompletados;
