@@ -27,7 +27,7 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public User findByIdUser(Integer id) {
+    public User findByIdUser(Integer id) throws NotFoundUserException{
         Optional<User> user = repository.findById(id);
         return user.orElseThrow(() -> new NotFoundUserException("Usuario não encontrado."));
     }
