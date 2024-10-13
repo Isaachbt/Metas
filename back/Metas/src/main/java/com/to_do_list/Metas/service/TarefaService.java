@@ -7,6 +7,6 @@ import com.to_do_list.Metas.model.dto.TarefaDto;
 import java.util.List;
 
 public interface TarefaService {
+    String saveTatefa(TarefaDto dto);
     List<Tarefa> findAllTarefaUser(Integer id);
-    void findBYIdUser(Integer id);
 }
