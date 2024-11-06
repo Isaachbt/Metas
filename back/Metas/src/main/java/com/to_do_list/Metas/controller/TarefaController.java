@@ -35,5 +35,11 @@ public class TarefaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTatefa(dto));
     }
 
+    @PutMapping("/update-tarefa")
+    public ResponseEntity<String> updateTarefa(@RequestBody @Valid TarefaDto dto){
+        service.updateTarefa(dto);
+        return ResponseEntity.ok("Atualizado");
+    }
+
 
 }
