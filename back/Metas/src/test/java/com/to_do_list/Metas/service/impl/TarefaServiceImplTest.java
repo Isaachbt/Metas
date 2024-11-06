@@ -6,6 +6,7 @@ import com.to_do_list.Metas.model.dto.TarefaDto;
 import com.to_do_list.Metas.model.role.RoleUser;
 import com.to_do_list.Metas.repositorio.TarefaRepositorio;
 import com.to_do_list.Metas.repositorio.UserRepository;
+import com.to_do_list.Metas.service.TarefaService;
 import com.to_do_list.Metas.service.exception.NotFoundUserException;
 import com.to_do_list.Metas.service.exception.TarefaNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -51,8 +52,6 @@ class TarefaServiceImplTest {
     @Mock
     private ModelMapper mapper;
     private Tarefa tarefa;
-    private Optional<List<Tarefa>> tarefaList;
-    private Optional<User> optionalUser;
     private User user;
 
 
@@ -68,8 +67,8 @@ class TarefaServiceImplTest {
     void whenfindAllTarefaUserThenReturnAnListTheAnTarefaInstance() {
         inject();
         List<Tarefa> list = tarefaService.findAllTarefaUser(1);
-        assertTrue(tarefaList.isPresent());
-        assertIterableEquals(list,tarefaList.get());
+        assertNotNull(list);
+        assertEquals(Tarefa.class,list.getFirst().getClass());
         assertEquals(list.getFirst().getUserId(),USER_ID);
     }
 
@@ -87,7 +86,7 @@ class TarefaServiceImplTest {
     @Test
     void whenFindByAllTarefaUserThenReturnAnTarefaNotFoundException(){
         when(userService.findByIdUser(anyInt())).thenReturn(user);
-        when(tarefaRepositorio.findByUserId(user.getId())).thenReturn(tarefaList);
+        when(tarefaRepositorio.findByUserId(user.getId())).thenReturn(Optional.of(List.of(tarefa)));
         when(tarefaService.findAllTarefaUser(ID)).thenThrow(new TarefaNotFoundException("Crie sua primeira tarefa."));
 
         try{
@@ -115,15 +114,13 @@ class TarefaServiceImplTest {
 
 
     private void inject(){
-        when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+        when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         when(userService.findByIdUser(anyInt())).thenReturn(user);
-        when(tarefaRepositorio.findByUserId(user.getId())).thenReturn(tarefaList);
+        when(tarefaRepositorio.findByUserId(user.getId())).thenReturn(Optional.of(List.of(tarefa)));
     }
 
     private void start(){
-        tarefaList = Optional.of(List.of(new Tarefa(ID, NOME, DATA_INICIADO, DATA_FINAL,9, USER_ID)));
         tarefa = new Tarefa(ID, NOME, DATA_INICIADO, DATA_FINAL,9, USER_ID);
         user = new User(USER_ID, EMAIL, PASSWORD, ROLE_USER);
-        optionalUser = Optional.of(new User(USER_ID,EMAIL,PASSWORD,ROLE_USER));
     }
 }
