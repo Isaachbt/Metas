@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-
 
 @Service
 public class TarefaServiceImpl implements TarefaService {
@@ -44,16 +44,33 @@ public class TarefaServiceImpl implements TarefaService {
 
     @Override
     public void updateTarefa(TarefaDto dto) throws TarefaNotFoundException,NotFoundUserException{
-        try {
-                repositorio.findById(dto.getId()).orElseThrow(() -> new TarefaNotFoundException("Id tarefa invalido."));
-                repositorio.findByUserId(dto.getUserId()).orElseThrow(() -> new NotFoundUserException("Id usuario não existe."));
 
+                repositorio.findById(dto.getId()).orElseThrow(() -> new TarefaNotFoundException("ID tarefa não encotrado"));
+                repositorio.findByUserId(dto.getUserId()).orElseThrow(() -> new NotFoundUserException("ID associado a tarefa, não encontrado."));
+
+        try {
                 var tarefa = new Tarefa();
                 BeanUtils.copyProperties(dto,tarefa);
                 repositorio.save(tarefa);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Não foi possivel atualizar a tarefa");
+        }
+    }
+
+    @Override
+    public void deleteTarefa(Integer idTarefa, Integer idUser) {
+        Optional<Tarefa> tarefaOptional = repositorio.findById(idTarefa);
+        tarefaOptional.orElseThrow(() -> new TarefaNotFoundException("ID tarefa não encotrado"));
+
+        if (!(Objects.equals(tarefaOptional.get().getUserId(), idUser))){
+            throw new NotFoundUserException("ID do usuario não esta associado a essa tarefa.");
+        }
+
+        try{
+            repositorio.delete(tarefaOptional.get());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao tentar deletar.");
         }
     }
 }
