@@ -52,6 +52,7 @@ class TarefaServiceImplTest {
     @Mock
     private ModelMapper mapper;
     private Tarefa tarefa;
+    private TarefaDto tarefaDto;
     private User user;
 
 
@@ -71,7 +72,6 @@ class TarefaServiceImplTest {
         assertEquals(Tarefa.class,list.getFirst().getClass());
         assertEquals(list.getFirst().getUserId(),USER_ID);
     }
-
     @Test
     void whenFindByAllTarefaUserThenReturnAnNotFoundUserException(){
         when(userService.findByIdUser(anyInt())).thenThrow(new NotFoundUserException("Usuario não encontrado."));
@@ -82,7 +82,6 @@ class TarefaServiceImplTest {
              assertEquals("Usuario não encontrado.",exception.getMessage());
 
     }
-
     @Test
     void whenFindByAllTarefaUserThenReturnAnTarefaNotFoundException(){
         when(userService.findByIdUser(anyInt())).thenReturn(user);
@@ -96,9 +95,6 @@ class TarefaServiceImplTest {
             assertEquals("Crie sua primeira tarefa.",e.getMessage());
         }
     }
-
-
-
     @Test
     @DisplayName("SalvandoTarefas")
     void saveTarefa(){
@@ -110,8 +106,50 @@ class TarefaServiceImplTest {
          assertEquals("Salvo com sucesso.",tarefaService.saveTatefa(tarefaDto));
 
     }
+    @Test
+    void whenSaveTarefaThenReturnUserNotFound(){
+        when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
+        when(userService.findByIdUser(anyInt())).thenThrow(new NotFoundUserException("Usuario não encontrado."));
+
+            TarefaDto dto = new TarefaDto();
+            dto.setUserId(ID);
+
+            NotFoundUserException erro = assertThrows(NotFoundUserException.class, () ->
+                    tarefaService.saveTatefa(dto));
+
+            assertEquals("Usuario não encontrado.",erro.getMessage());
+
+    }
+    @Test
+    void whenUpdateThenReturnSucesso(){
+        when(tarefaRepositorio.findById(anyInt())).thenReturn(Optional.of(tarefa));
+        when(tarefaRepositorio.findByUserId(anyInt())).thenReturn(Optional.of(List.of(tarefa)));
+
+        try{
+            tarefaService.updateTarefa(tarefaDto);
+        }catch (Exception e){
+            throw new RuntimeException("Não foi possivel atualizar essa tarefa");
+        }
+    }
+    @Test
+    void whenUpadteThenReturnErroOfUserOrTarefaNotFound(){
+        when(tarefaRepositorio.findByUserId(anyInt())).thenReturn(Optional.of(List.of(tarefa)));
+
+        TarefaNotFoundException ex = assertThrows(TarefaNotFoundException.class, () -> tarefaService.updateTarefa(tarefaDto));
+        assertEquals("ID tarefa não encotrado",ex.getMessage());
 
 
+          when(tarefaRepositorio.findById(anyInt())).thenReturn(Optional.of(tarefa));
+          when(tarefaRepositorio.findByUserId(anyInt())).thenThrow(new NotFoundUserException("ID associado a tarefa, não encontrado."));
+
+        NotFoundUserException erro = assertThrows(NotFoundUserException.class, () -> tarefaService.updateTarefa(tarefaDto));
+        assertEquals("ID associado a tarefa, não encontrado.",erro.getMessage());
+
+    }
+
+    @Test
+    void whenUpdateThenReturnErroSave(){
+    }
 
     private void inject(){
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
@@ -121,6 +159,7 @@ class TarefaServiceImplTest {
 
     private void start(){
         tarefa = new Tarefa(ID, NOME, DATA_INICIADO, DATA_FINAL,9, USER_ID);
+        tarefaDto = new TarefaDto(ID, NOME, DATA_INICIADO, DATA_FINAL,9, USER_ID);
         user = new User(USER_ID, EMAIL, PASSWORD, ROLE_USER);
     }
 }
