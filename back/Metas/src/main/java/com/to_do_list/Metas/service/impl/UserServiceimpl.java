@@ -23,7 +23,12 @@ public class UserServiceimpl implements UserService {
     @Override
     public User saveUser(UserDto dto) {
         findByEmailUser(dto.getEmail());
-        return repository.save(mapper.map(dto,User.class));
+        try {
+            return repository.save(mapper.map(dto,User.class));
+        }catch (Exception e){
+            throw new IllegalArgumentException("Erro ao tentar salvar usuario");
+        }
+
     }
 
     @Override
@@ -34,7 +39,7 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public void findByEmailUser(String email)throws UserExistException {
-        if (!repository.existsByEmail(email)){
+        if (repository.existsByEmail(email)){
             throw new UserExistException("Email já cadastrado no sistema.");
         }
     }
