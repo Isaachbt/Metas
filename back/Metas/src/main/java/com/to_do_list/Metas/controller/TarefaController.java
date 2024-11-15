@@ -2,6 +2,7 @@ package com.to_do_list.Metas.controller;
 
 import com.to_do_list.Metas.model.dto.TarefaDto;
 import com.to_do_list.Metas.service.impl.TarefaServiceImpl;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/tarefas")
@@ -31,6 +33,7 @@ public class TarefaController {
     }
 
     @PostMapping("/save-tarefa")
+    @Transactional
     public ResponseEntity<String> saveTarefa(@RequestBody @Valid TarefaDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveTatefa(dto));
     }
@@ -41,5 +44,10 @@ public class TarefaController {
         return ResponseEntity.ok("Atualizado");
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Objects> deleteTarefa(@PathVariable Integer idTarefa, Integer idUser){
+        service.deleteTarefa(idTarefa,idUser);
+        return ResponseEntity.ok().build();
 
+    }
 }
