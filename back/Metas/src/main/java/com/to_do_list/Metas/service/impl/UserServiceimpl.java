@@ -2,7 +2,9 @@ package com.to_do_list.Metas.service.impl;
 
 import com.to_do_list.Metas.model.User;
 import com.to_do_list.Metas.model.dto.UserDto;
+import com.to_do_list.Metas.model.dto.UserLoginDTO;
 import com.to_do_list.Metas.repositorio.UserRepository;
+import com.to_do_list.Metas.service.AuthenticationService;
 import com.to_do_list.Metas.service.UserService;
 import com.to_do_list.Metas.service.exception.NotFoundUserException;
 import com.to_do_list.Metas.service.exception.UserExistException;
@@ -19,6 +21,8 @@ public class UserServiceimpl implements UserService {
     private UserRepository repository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @Override
     public User saveUser(UserDto dto) {
@@ -29,6 +33,15 @@ public class UserServiceimpl implements UserService {
             throw new IllegalArgumentException("Erro ao tentar salvar usuario");
         }
 
+    }
+
+    @Override
+    public Object loginUser(UserLoginDTO dto) {
+        try{
+            return authenticationService.login(dto);
+        }catch (Exception e){
+            throw new IllegalArgumentException("Não foi possivel efetuar login.");
+        }
     }
 
     @Override
