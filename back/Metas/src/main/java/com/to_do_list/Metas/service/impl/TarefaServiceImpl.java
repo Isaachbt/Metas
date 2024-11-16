@@ -8,6 +8,7 @@ import com.to_do_list.Metas.service.TarefaService;
 import com.to_do_list.Metas.service.UserService;
 import com.to_do_list.Metas.service.exception.NotFoundUserException;
 import com.to_do_list.Metas.service.exception.TarefaNotFoundException;
+import com.to_do_list.Metas.utils.AuthenticationFacade;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.BeanUtils;
@@ -27,6 +28,8 @@ public class TarefaServiceImpl implements TarefaService {
     private UserService userService;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private AuthenticationFacade facade;
 
     @Override
     public String saveTatefa(TarefaDto dto) {
@@ -47,7 +50,6 @@ public class TarefaServiceImpl implements TarefaService {
 
                 repositorio.findById(dto.getId()).orElseThrow(() -> new TarefaNotFoundException("ID tarefa não encotrado"));
                 repositorio.findByUserId(dto.getUserId()).orElseThrow(() -> new NotFoundUserException("ID associado a tarefa, não encontrado."));
-
         try {
                 var tarefa = new Tarefa();
                 BeanUtils.copyProperties(dto,tarefa);
@@ -59,11 +61,11 @@ public class TarefaServiceImpl implements TarefaService {
     }
 
     @Override
-    public void deleteTarefa(Integer idTarefa, Integer idUser) {
+    public void deleteTarefa(Integer idTarefa) {
         Optional<Tarefa> tarefaOptional = repositorio.findById(idTarefa);
         tarefaOptional.orElseThrow(() -> new TarefaNotFoundException("ID tarefa não encotrado"));
 
-        if (!(Objects.equals(tarefaOptional.get().getUserId(), idUser))){
+        if (!(Objects.equals(tarefaOptional.get().getUser(), facade.getCurrentUser().getId()))){
             throw new NotFoundUserException("ID do usuario não esta associado a essa tarefa.");
         }
 
