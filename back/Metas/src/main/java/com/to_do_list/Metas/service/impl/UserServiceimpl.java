@@ -8,6 +8,7 @@ import com.to_do_list.Metas.service.AuthenticationService;
 import com.to_do_list.Metas.service.UserService;
 import com.to_do_list.Metas.service.exception.NotFoundUserException;
 import com.to_do_list.Metas.service.exception.UserExistException;
+import com.to_do_list.Metas.utils.AuthenticationFacade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class UserServiceimpl implements UserService {
     private ModelMapper mapper;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private AuthenticationFacade facade;
 
     @Override
     public User saveUser(UserDto dto) {
@@ -45,13 +48,27 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public User findByIdUser(Integer id) throws NotFoundUserException{
+    public User perfil() {
+
+            Optional<User> user = repository.findById(facade.getCurrentUser().getId());
+            if (user.isEmpty())
+                throw new NotFoundUserException("Usuario não encontrado.");
+            try {
+                return user.get();
+            }catch (Exception e){
+                throw new IllegalArgumentException("Erro ao tentar recuperar informações.");
+            }
+
+    }
+
+    @Override
+    public User findByIdUser(Integer id) {
         Optional<User> user = repository.findById(id);
         return user.orElseThrow(() -> new NotFoundUserException("Usuario não encontrado."));
     }
 
     @Override
-    public void findByEmailUser(String email)throws UserExistException {
+    public void findByEmailUser(String email) {
         if (repository.existsByEmail(email)){
             throw new UserExistException("Email já cadastrado no sistema.");
         }
