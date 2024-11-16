@@ -1,5 +1,6 @@
 package com.to_do_list.Metas.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.to_do_list.Metas.model.role.RoleUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +27,17 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleUser role;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<Tarefa> tarefaList;
+
+    public User(Integer id, String email, String password, RoleUser role, List<Tarefa> tarefaList) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.tarefaList = tarefaList;
+    }
 
     public User(Integer id, String email, String password, RoleUser role) {
         this.id = id;

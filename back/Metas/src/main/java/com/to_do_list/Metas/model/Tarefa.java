@@ -1,7 +1,7 @@
 package com.to_do_list.Metas.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,16 +24,18 @@ public class Tarefa {
     private LocalDateTime dataIniciado;
     private LocalDateTime dataFinal;
     private Integer qDiasCompletados;
-    @Column(name = "userId")
-    private Integer userId;
+    @JoinColumn(name = "user_id",nullable = false)
+    @JsonBackReference
+    @ManyToOne
+    private User user;
 
-    public Tarefa(Integer id, String nome, LocalDateTime dataIniciado, LocalDateTime dataFinal, Integer qDiasCompletados, Integer userId) {
+    public Tarefa(Integer id, String nome, LocalDateTime dataIniciado, LocalDateTime dataFinal, Integer qDiasCompletados, User user) {
         this.id = id;
         this.nome = nome;
         this.dataIniciado = dataIniciado;
         this.dataFinal = dataFinal;
         this.qDiasCompletados = qDiasCompletados;
-        this.userId = userId;
+        this.user = user;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class Tarefa {
                 ", dataIniciado=" + dataIniciado +
                 ", dataFinal=" + dataFinal +
                 ", qDiasCompletados=" + qDiasCompletados +
-                ", userId=" + userId +
+                ", user=" + user +
                 '}';
     }
 }
