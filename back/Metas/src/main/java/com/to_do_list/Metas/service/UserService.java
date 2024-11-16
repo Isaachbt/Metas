@@ -8,6 +8,7 @@ public interface UserService {
 
     User saveUser(UserDto dto);
     Object loginUser(UserLoginDTO dto);
+    User perfil();
     User findByIdUser(Integer id);
     void findByEmailUser(String email);
 }
