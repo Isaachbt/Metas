@@ -2,6 +2,7 @@ package com.to_do_list.Metas.controller;
 
 import com.to_do_list.Metas.model.dto.TarefaDto;
 import com.to_do_list.Metas.service.impl.TarefaServiceImpl;
+import com.to_do_list.Metas.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -23,11 +24,13 @@ public class TarefaController {
 
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private AuthenticationFacade facade;
 
-    @GetMapping(value = "/findAll/{id}")
-    public ResponseEntity<List<TarefaDto>> findAllTarefaUser(@PathVariable Integer id){
+    @GetMapping(value = "/findAll")
+    public ResponseEntity<List<TarefaDto>> findAllTarefaUser(){
         return ResponseEntity.ok().body(
-                service.findAllTarefaUser(id)
+                service.findAllTarefaUser(facade.getCurrentUser().getId())
                         .stream()
                         .map(x -> mapper.map(x,TarefaDto.class)).toList());
     }
@@ -45,8 +48,8 @@ public class TarefaController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Objects> deleteTarefa(@PathVariable Integer idTarefa, Integer idUser){
-        service.deleteTarefa(idTarefa,idUser);
+    public ResponseEntity<Objects> deleteTarefa(@PathVariable Integer idTarefa){
+        service.deleteTarefa(idTarefa);
         return ResponseEntity.ok().build();
 
     }
