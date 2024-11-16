@@ -1,5 +1,6 @@
 package com.to_do_list.Metas.config;
 
+import com.to_do_list.Metas.controller.exceptions.CustomAccessDeniedHandler;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,33 +20,39 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class ConfigSecurity {
+
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
     @SneakyThrows
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http){
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/tarefas/findAll/{id}").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST,"/tarefas/save-tarefa").hasRole("USER")
-                        .requestMatchers(HttpMethod.PUT, "tarefa/update-tarefa").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "tarefa/delete").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/perfil").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/tarefas/findAll").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/tarefas/save-tarefa").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/tarefa/update-tarefa").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/tarefa/delete").hasRole("USER")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptions -> exceptions.accessDeniedHandler(accessDeniedHandler))
                 .build();
     }
 
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration auth)throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
         return auth.getAuthenticationManager();
     }
 }
