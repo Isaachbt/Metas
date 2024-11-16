@@ -10,5 +10,5 @@ public interface TarefaService {
     String saveTatefa(TarefaDto dto);
     List<Tarefa> findAllTarefaUser(Integer id);
     void updateTarefa(TarefaDto dto);
-    void deleteTarefa(Integer idTarefa,Integer idUser);
+    void deleteTarefa(Integer idTarefa);
 }
