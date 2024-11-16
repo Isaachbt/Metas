@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +57,10 @@ public class UserController {
         authenticationManager.authenticate(authenticationToken);
 
         return ResponseEntity.ok(service.loginUser(dto));
+    }
+
+    @GetMapping("/perfil")
+    public ResponseEntity<Object> perfil(){
+        return ResponseEntity.ok(service.perfil());
     }
 }
