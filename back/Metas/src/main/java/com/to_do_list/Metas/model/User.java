@@ -1,5 +1,6 @@
 package com.to_do_list.Metas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.to_do_list.Metas.model.role.RoleUser;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,35 +21,33 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(nullable = false,unique = true)
     private String email;
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleUser role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
     private List<Tarefa> tarefaList;
+    private boolean online;
 
-    public User(Integer id, String email, String password, RoleUser role, List<Tarefa> tarefaList) {
+    public User(UUID id, String email, String password, RoleUser role, List<Tarefa> tarefaList,boolean online) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.tarefaList = tarefaList;
+        this.online = online;
     }
 
-    public User(Integer id, String email, String password, RoleUser role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
 
     public User() {
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
