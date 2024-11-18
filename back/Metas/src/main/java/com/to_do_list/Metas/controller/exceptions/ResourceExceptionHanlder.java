@@ -1,8 +1,6 @@
 package com.to_do_list.Metas.controller.exceptions;
 
-import com.to_do_list.Metas.service.exception.NotFoundUserException;
-import com.to_do_list.Metas.service.exception.TarefaNotFoundException;
-import com.to_do_list.Metas.service.exception.UserExistException;
+import com.to_do_list.Metas.service.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +29,17 @@ public class ResourceExceptionHanlder {
     public ResponseEntity<StandarError> userExist(UserExistException ex,HttpServletRequest request){
         var error = new StandarError(LocalDateTime.now(),HttpStatus.CONFLICT.value(), ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgument.class)
+    public ResponseEntity<StandarError> IllegalArgumentException(IllegalArgument ex,HttpServletRequest request){
+        var error = new StandarError(LocalDateTime.now(),HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(PasswordIncorreta.class)
+    public ResponseEntity<StandarError> passWordIncorreta(PasswordIncorreta ex,HttpServletRequest request){
+        var error = new StandarError(LocalDateTime.now(),HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
