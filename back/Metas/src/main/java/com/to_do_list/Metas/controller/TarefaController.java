@@ -5,6 +5,7 @@ import com.to_do_list.Metas.service.impl.TarefaServiceImpl;
 import com.to_do_list.Metas.utils.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,8 +48,8 @@ public class TarefaController {
         return ResponseEntity.ok("Atualizado");
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Objects> deleteTarefa(@PathVariable Integer idTarefa){
+    @DeleteMapping("/delete/{idtarefa}")
+    public ResponseEntity<Objects> deleteTarefa(@PathVariable(value = "idtarefa") @NotNull Integer idTarefa){
         service.deleteTarefa(idTarefa);
         return ResponseEntity.ok().build();
 
