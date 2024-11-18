@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceimpl implements UserService {
@@ -30,6 +31,7 @@ public class UserServiceimpl implements UserService {
     @Override
     public User saveUser(UserDto dto) {
         findByEmailUser(dto.getEmail());
+
         try {
             return repository.save(mapper.map(dto,User.class));
         }catch (Exception e){
@@ -39,9 +41,18 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public Object loginUser(UserLoginDTO dto) {
+    public Object loginUser(UserLoginDTO dto) throws NotFoundUserException{
+        Optional<User> user = repository.findByEmail(dto.getEmail());
+        if (user.isEmpty())
+            throw new NotFoundUserException("Usuario não encontrado.");
+
+
         try{
-            return authenticationService.login(dto);
+            User userSave = user.get();
+            userSave.setOnline(true);
+            String token = authenticationService.login(dto);
+            repository.save(userSave);
+            return token;
         }catch (Exception e){
             throw new IllegalArgumentException("Não foi possivel efetuar login.");
         }
@@ -62,7 +73,7 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public User findByIdUser(Integer id) {
+    public User findByIdUser(UUID id) {
         Optional<User> user = repository.findById(id);
         return user.orElseThrow(() -> new NotFoundUserException("Usuario não encontrado."));
     }
