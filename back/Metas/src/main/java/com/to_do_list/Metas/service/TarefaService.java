@@ -5,8 +5,12 @@ import com.to_do_list.Metas.model.User;
 import com.to_do_list.Metas.model.dto.TarefaDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TarefaService {
     String saveTatefa(TarefaDto dto);
-    List<Tarefa> findAllTarefaUser(Integer id);
+    List<Tarefa> findAllTarefaUser(UUID id);
+    void updateTarefa(TarefaDto dto);
+    void deleteTarefa(Integer idTarefa);
+    User validUser();
 }

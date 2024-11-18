@@ -1,17 +1,14 @@
 package com.to_do_list.Metas.model.dto;
 
-import com.to_do_list.Metas.model.role.RoleUser;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
-public class UserDto {
-
-    private UUID id;
+public class UserLoginDTO {
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
-    private RoleUser role;
 }
