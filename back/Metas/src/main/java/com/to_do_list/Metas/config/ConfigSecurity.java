@@ -41,7 +41,7 @@ public class ConfigSecurity {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/perfil").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/auth/perfil").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/tarefas/findAll").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/tarefas/save-tarefa").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/tarefa/update-tarefa").hasRole("USER")
@@ -50,7 +50,7 @@ public class ConfigSecurity {
                 .exceptionHandling(e ->e.accessDeniedHandler(error403)
                         .authenticationEntryPoint(error401))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptions -> exceptions.accessDeniedHandler(error403))
+                //.exceptionHandling(exceptions -> exceptions.accessDeniedHandler(error403))
                 .build();
     }
 
